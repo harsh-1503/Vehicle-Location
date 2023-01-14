@@ -1,31 +1,67 @@
+import React,{useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View , Image, TextInput} from 'react-native';
+import { StyleSheet, Text, View , Image, TextInput, ImageBackground, ScrollView} from 'react-native';
+import Home from './components/Home';
+import Login from './components/Login';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 // import SvgUrl from 
-export default function App() {
-  // const Input=({labe})
+import Search from './components/Search';
+// export default function App() {
+//   // const Input=({labe})
+//   // const image = require("./ezgif-2-60050ca42b.png")
+//   return (
+//     <>
+//       {/* <Search/> */}
+//       <Home/>
+//       {/* <Login/> */}
+//     </>
+//   );
+// }
+import HomeScreen from './components/Home'
+import SearchScreen from './components/Search'
+import InfoScreen from './components/Info'
+import Info from './components/Info';
+const Stack = createNativeStackNavigator();
+import data from './BusData.json';
+import { useEffect } from 'react';
+
+const MyStack = () => {
+  const [state,setState]=useState();
+  const [route,setRoute]=useState({});
+  const [ShowData,setShowData]=useState([]);
+  const lapsList = ShowData.map((data) => {
+    // console.warn(data.Name)
+    return (
+      <Info name={data.Name} departTime={data.Departure_Time_From_Source} arrivalTime={data.Arrival_Time_At_Destination} timeRequired={data.TotalTime} cost={data.Cost}/>
+    )
+  })
+  useEffect(()=>{
+    if(route!==undefined){
+      // ghg
+      setShowData(data.filter(i=>i.From==route.from && i.To==route.to));
+    }
+  },[route])
   return (
-    <View style={styles.container} >
-      
-      <View style={styles.rating}>
-        {/* <Image source={require('./my-icon.jpg')} /> */}
-      </View>
-      <TextInput placeholder='Enter first location' onChangeText={(e)=>console.warn(e) }  style={{fontSize:20,borderColor: '#000000',borderWidth: 3,padding: 10,borderRadius: 10,margin: 10,width: '90%'}}></TextInput>
-      <TextInput placeholder='Enter first location' onChangeText={(e)=>console.warn(e) }  style={{fontSize:20,borderColor: '#000000',borderWidth: 3,padding: 10,borderRadius: 10,margin: 10,width: '90%'}}></TextInput>
-      
-      
-      <StatusBar style="auto" />
-    </View>
+    // <NavigationContainer>
+    //   <Stack.Navigator>
+    //     <Stack.Screen
+    //       name="QuadSquad"
+    //       component={HomeScreen}
+    //     />
+    //     <Stack.Screen name="Search" component={SearchScreen} />
+    //     <Stack.Screen name="Info" component={InfoScreen} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    <>
+    <ScrollView>
+    <Search setRoute={setRoute}/>
+      {lapsList}
+    </ScrollView>
+   {/* <Info/> */}
+    </>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginVertical: 60,
-
-  }
-  
-});
+export default MyStack
